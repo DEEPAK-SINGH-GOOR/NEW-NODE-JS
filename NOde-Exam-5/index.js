@@ -9,6 +9,7 @@ let course = []
 app.get('/', (req, res) => {
     res.send("exam 4 courses from")
 })
+
 app.post('/postCourse', (req, res) => {
     let { name, category, instructor, duration } = req.body
     const newCourse = {
@@ -29,8 +30,8 @@ app.get('/courses', (req, res) => {
 
 app.delete('/delete/:id', (req, res) => {
     const id = parseInt(req.params.id);
-    const updatedCourses = course.filter(course => course.id !== id);
-    course = updatedCourses;
+    const update= course.filter(course => course.id !== id);
+    course = update;
     res.json(course);
 });
 app.listen(8090, () => {

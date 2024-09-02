@@ -11,31 +11,32 @@
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f7f9;
+            background-color: #f5f2f0;
         }
 
         h1 {
-            background-color: #007bff;
+            background-color: #5b5b5b; 
             color: white;
             padding: 20px;
             margin: 0;
             text-align: center;
-            font-size: 28px;
-            border-bottom: 4px solid #0056b3;
+            font-size: 26px;
+            background-color: #5b5b5b; 
         }
 
         form {
-            max-width: 600px;
+            max-width: 500px;
             margin: 20px auto;
             padding: 20px;
             background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
         }
 
         form label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 600;
             color: #333;
         }
@@ -52,50 +53,56 @@
         }
 
         form button {
-            background-color: #007bff;
+            background-color: #5b5b5b; 
             color: white;
             border: none;
-            padding: 12px 20px;
-            border-radius: 6px;
+            padding: 14px 24px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 18px;
             font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
         }
 
         form button:hover {
-            background-color: #0056b3;
+            background-color: #5b5b5b; 
+            transform: scale(1.05);
         }
 
         #courseList {
             max-width: 1200px;
             margin: 20px auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            overflow-x: auto;
         }
 
-        .courseCard {
+        table {
+            width: 100%;
+            border-collapse: collapse;
             background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
         }
 
-        .courseCard h2 {
-            margin-top: 0;
-            font-size: 22px;
-            color: #007bff;
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
         }
 
-        .courseCard p {
-            margin: 5px 0;
+        th {
+            background-color: #5b5b5b; /* Autumn orange */
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
         }
     </style>
-    <h1>Add Course</h1>
+    <h1>Course</h1>
     <form id="addCourse">
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" required><br>
@@ -107,9 +114,19 @@
         <input type="number" id="duration" name="duration" required><br>
         <button type="submit">Add Course</button>
     </form>
-
-    <h1>Course List</h1>
-    <div id="courseList"></div>
+    <br><br>
+    <div id="courseList">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Instructor</th>
+                </tr>
+            </thead>
+            <tbody id="coursetable"></tbody>
+        </table>
+    </div>
     <script>
         document.getElementById('addCourse').addEventListener('submit', (e) => {
             e.preventDefault();
@@ -139,32 +156,30 @@
                     uiMaker();
                 });
         });
+
         const uiMaker = async () => {
             const response = await fetch('http://localhost:8090/courses');
             const data = await response.json();
 
-            const courseList = document.getElementById('courseList');
-            courseList.innerHTML = '';
+            const coursetable = document.getElementById('coursetable');
+            coursetable.innerHTML = '';
 
             data.map(course => {
-                const courseCard = document.createElement('div');
-                courseCard.className = 'courseCard';
+                const row = document.createElement('tr');
 
-                const name = document.createElement('h2');
+                const name = document.createElement('td');
                 name.textContent = course.name;
 
-                const category = document.createElement('p');
-                category.textContent = `Category: ${course.category}`;
-                category.className = 'category';
+                const category = document.createElement('td');
+                category.textContent = course.category;
 
-                const instructor = document.createElement('p');
-                instructor.textContent = `Instructor: ${course.instructor}`;
-                instructor.className = 'instructor';
-
-                courseCard.append(name, category, instructor);
-                courseList.appendChild(courseCard);
+                const instruc = document.createElement('td');
+                instruc.textContent = course.instructor;
+                row.append(name, category, instruc);
+                coursetable.appendChild(row);
             });
         }
+
         uiMaker();
     </script>
 </body>
