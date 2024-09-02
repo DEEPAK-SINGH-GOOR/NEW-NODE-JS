@@ -7,7 +7,7 @@ app.use(cors())
 
 let course = []
 app.get('/', (req, res) => {
-    res.send("exam 4 courses from")
+    res.send("Data for course")
 })
 
 app.post('/postCourse', (req, res) => {

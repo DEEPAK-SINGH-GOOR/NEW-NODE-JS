@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <body>
         <style>
@@ -12,99 +14,93 @@
                 font-family: 'Arial', sans-serif;
                 margin: 0;
                 padding: 0;
-                background-color: #f5f2f0;
-            }
-    
-            h1 {
-                background-color: #5b5b5b; 
-                color: white;
-                padding: 20px;
-                margin: 0;
+                background-color: #e0e0e0;
                 text-align: center;
-                font-size: 26px;
-                background-color: #5b5b5b; 
             }
-    
+        
+            h1 {
+                background-color: #333;
+                color: #fff;
+                padding: 15px;
+                text-align: center;
+                margin: 0;
+                font-size: 24px;
+            }
+        
             form {
-                max-width: 500px;
+                max-width: 400px;
                 margin: 20px auto;
-                padding: 20px;
-                background-color: white;
-                border-radius: 10px;
-                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-                border: 1px solid #ddd;
+                padding: 15px;
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             }
-    
+        
             form label {
                 display: block;
-                margin-bottom: 10px;
-                font-weight: 600;
-                color: #333;
-            }
-    
-            form input[type="text"],
-            form input[type="number"] {
-                width: calc(100% - 22px);
-                padding: 12px;
-                margin-bottom: 16px;
-                border: 1px solid #ddd;
-                border-radius: 6px;
-                font-size: 16px;
-                box-sizing: border-box;
-            }
-    
-            form button {
-                background-color: #5b5b5b; 
-                color: white;
-                border: none;
-                padding: 14px 24px;
-                border-radius: 8px;
-                cursor: pointer;
-                font-size: 18px;
+                margin-bottom: 8px;
                 font-weight: bold;
-                transition: background-color 0.3s, transform 0.3s;
+                color: #444;
             }
-    
+        
+            form input {
+                width: calc(100% - 20px);
+                padding: 10px;
+                margin-bottom: 12px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                font-size: 14px;
+            }
+        
+            form button {
+                background-color: #333;
+                color: #fff;
+                border: none;
+                padding: 12px 20px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+                transition: background-color 0.3s;
+            }
+        
             form button:hover {
-                background-color: #5b5b5b; 
-                transform: scale(1.05);
+                background-color: #555;
             }
-    
+        
             #courseList {
-                max-width: 1200px;
+                max-width: 1000px;
                 margin: 20px auto;
-                overflow-x: auto;
             }
-    
+        
             table {
                 width: 100%;
                 border-collapse: collapse;
-                background-color: white;
-                border-radius: 10px;
-                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+                background-color: #fff;
+                border-radius: 4px;
+                overflow: hidden;
             }
-    
+        
             th, td {
-                padding: 12px;
+                padding: 10px;
                 text-align: left;
                 border-bottom: 1px solid #ddd;
             }
-    
+        
             th {
-                background-color: #5b5b5b; /* Autumn orange */
-                color: white;
+                background-color: #333;
+                color: #fff;
             }
-    
+        
             tr:nth-child(even) {
-                background-color: #f9f9f9;
+                background-color: #f7f7f7;
             }
-    
+        
             tr:hover {
-                background-color: #f1f1f1;
+                background-color: #f0f0f0;
             }
         </style>
         <h1>Course</h1>
-        <form id="addCourse">
+        <form id="formcourse">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required><br>
             <label for="category">Category:</label>
@@ -129,60 +125,60 @@
             </table>
         </div>
         <script>
-            document.getElementById('addCourse').addEventListener('submit', (e) => {
+            document.getElementById('formcourse').addEventListener('submit', (e) => {
                 e.preventDefault();
-    
+
                 let name = document.getElementById('name').value;
                 let category = document.getElementById('category').value;
                 let instructor = document.getElementById('instructor').value;
                 let duration = document.getElementById('duration').value;
-    
+
                 const data = {
                     name: name,
                     category: category,
                     instructor: instructor,
                     duration: duration
                 };
-    
-                fetch('http://localhost:8090/postCourse', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Course added:', data);
-                        uiMaker();
+                async function formcourse() {
+                    const response = await fetch('http://localhost:8090/postCourse', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
                     });
+                    let courses = await response.json();
+                    console.log('Course added:', courses);
+                    uiMaker();
+                }
+                formcourse();
             });
-    
+
             const uiMaker = async () => {
                 const response = await fetch('http://localhost:8090/courses');
                 const data = await response.json();
-    
                 const coursetable = document.getElementById('coursetable');
                 coursetable.innerHTML = '';
-    
                 data.map(course => {
+                    
                     const row = document.createElement('tr');
-    
+
                     const name = document.createElement('td');
-                    name.textContent = course.name;
-    
+                    name.innerHTML = course.name;
+
                     const category = document.createElement('td');
-                    category.textContent = course.category;
-    
+                    category.innerHTML = course.category;
+
                     const instruc = document.createElement('td');
-                    instruc.textContent = course.instructor;
+                    instruc.innerHTML = course.instructor;
                     row.append(name, category, instruc);
                     coursetable.appendChild(row);
                 });
             }
-    
+
             uiMaker();
         </script>
     </body>
 </body>
+
 </html>
