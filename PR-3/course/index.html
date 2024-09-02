@@ -89,4 +89,53 @@
         </div>
     </div>
 </body>
+<script>
+    document.getElementById('add-course-form').addEventListener('submit', async function(event) {
+      event.preventDefault();
+  
+      const name = document.getElementById('name').value;
+      const description = document.getElementById('description').value;
+      const durationTime = document.getElementById('durationTime').value;
+      const imageUrl = document.getElementById('imageUrl').value;
+      const language = document.getElementById('language').value;
+      const price = document.getElementById('price').value;
+  
+      const response = await fetch('http://localhost:8090/course/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, description, durationTime, imageUrl, language, price })
+      });
+  
+      if (response.ok) {
+        loadCourses();
+        document.getElementById('add-course-form').reset();
+      } else {
+        alert('Failed to add course');
+      }
+    });
+  
+    async function loadCourses() {
+      const response = await fetch('http://localhost:8090/course/all');
+      const courses = await response.json();
+      const courseList = document.getElementById('courses');
+      courseList.innerHTML = '';
+  
+      courses.forEach(course => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <h3>${course.name}</h3>
+          <p>${course.description}</p>
+          <p>Duration: ${course.durationTime}</p>
+          <p>Language: ${course.language}</p>
+          <p>Price: $${course.price}</p>
+          <img src="${course.imageUrl}" alt="${course.name}" style="max-width: 100px;">
+        `;
+        courseList.appendChild(li);
+      });
+    }
+  
+    // Load courses when the page loads
+    window.onload = loadCourses;
+  </script>
+  
 </html>

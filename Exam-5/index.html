@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Add Course</title>
+</head>
+
+<body>
+    <h1>Add Course</h1>
+    <form id="addCourseForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name"><br>
+        <label for="category">Category:</label>
+        <input type="text" id="category" name="category"><br>
+        <label for="instructor">Instructor:</label>
+        <input type="text" id="instructor" name="instructor"><br>
+        <label for="duration">Duration (hours):</label>
+        <input type="number" id="duration" name="duration"><br>
+        <button type="submit">Add Course</button>
+    </form>
+
+    <h1>Course List</h1>
+    <div id="courseList"></div>
+    <script>
+        document.getElementById('addCourseForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+            fetch('http://localhost:8090/postCourse', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Course added:', data);
+                });
+        });
+
+        fetch('http://localhost:8090/courses')
+            .then(response => response.json())
+            .then(data => {
+                const courseList = document.getElementById('courseList');
+                data.forEach(course => {
+                    const courseDiv = document.createElement('div');
+                    courseDiv.innerHTML = `<h2>${course.name}</h2><p>${course.category}</p><p>${course.instructor}</p>`;
+                    courseList.appendChild(courseDiv);
+                });
+            });
+    </script>
+</body>
+
+</html>
