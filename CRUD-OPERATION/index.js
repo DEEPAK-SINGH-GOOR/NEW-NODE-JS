@@ -17,11 +17,11 @@ app.post("/",async(req,res)=>{
     res.send(data);
 })
 app.put("/:id",async(req,res) => {
-    let data = await user.findByIdAndUpdate(req.params.id,req.body,{new:true});
+    let data = await user.findByIdAndUpdate(req.params.id,req.body);
     res.send(data);
 });
 app.patch("/:id",async(req,res) => {
-    let data = await user.findByIdAndUpdate(req.params.id,req.body,{new:true});
+    let data = await user.findByIdAndUpdate(req.params.id,req.body);
     res.send(data);
 });
 app.delete("/:id",async(req,res) => {
